@@ -1,0 +1,28 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+<div class="col-md-4 offset-md-4">
+    <div class="card-body">
+        <form action="/update/{{animal.0}}" method="POST">
+            
+            <div class="form-group">
+                <input type="text" name="animalname" placeholder="Nombre" value="{{animal.1}}" class="form-control">
+            </div>
+            <div class="form-group">
+                <input type="text" name="species" placeholder="Especie" value="{{animal.2}}" class="form-control">
+            </div>
+            <div class="form-group">
+                <input type="text" name="weight" placeholder="Peso" value="{{animal.3}}" class="form-control">
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary btn-block">
+                    Save
+                </button>
+            </div>
+            
+        </form>
+    </div>
+</div>
+
+{% endblock %}
