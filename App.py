@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, flash
 #Importación que permite operar con Flask
 from flask_mysqldb import MySQL
 #Importación que permite operar con la base de datos MySQL
