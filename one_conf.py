@@ -1,5 +1,13 @@
-from flask_cors import CORS
-from configuration.configuration import CORSConfig
+from configuration.configuration import DevConfig, BaseConfig, ProConfig, CORSConfig
 
-def set_debug():
-    return CORSConfig.BaseConfig.debug
+def get_DEBUG_DevConfig():
+    return DevConfig.DEBUG
+
+def get_DEBUG_BaseConfig():
+    return BaseConfig.DEBUG
+
+def get_DEBUG_ProConfig():
+    return ProConfig.DEBUG
+
+def get_MAX_AGE_CORSConfig():
+    return CORSConfig.MAX_AGE
