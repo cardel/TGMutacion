@@ -1,10 +1,9 @@
-from flask import Flask, render_template, request, flash
-#Importación que permite operar con Flask
+from flask import Flask, render_template, request, flash, jsonify
+#Importaciones que permiten operar con Flask
+#Importar jsonify es necesario para la operación de la App con los archivos configuracion
 from flask_mysqldb import MySQL
 #Importación que permite operar con la base de datos MySQL
 from flask_socketio import SocketIO
-#Importación necesaria para la operación de la App con los archivos configarion
-from flask import jsonify
 #Importación necesaria para la operación de los Json con la base de datos
 from flask_cors import CORS
 from configuration.configuration import CORSConfig
