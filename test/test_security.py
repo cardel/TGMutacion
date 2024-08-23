@@ -1,6 +1,7 @@
 from unittest import TestCase
-from one_conf import *
+from one_conf import set_debug
 
 class TestDatabaseFunctions(TestCase):
-    pass
-
+    
+    def test_debug():
+        self.assertEqual(set_debug(), True)
