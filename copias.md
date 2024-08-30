@@ -1,6 +1,12 @@
 # one_conf.py copies
+from configuration.configuration import DevConfig, BaseConfig, ProConfig, CORSConfig
+
 def get_DEBUG_DevConfig():
     return DevConfig.DEBUG
+
+def set_DEBUG_DevConfig():
+    if DevConfig.DEBUG == True:
+        DevConfig.DEBUG = False
 
 def get_DEBUG_BaseConfig():
     return BaseConfig.DEBUG
@@ -11,9 +17,14 @@ def get_DEBUG_ProConfig():
 def get_MAX_AGE_CORSConfig():
     return CORSConfig.MAX_AGE
 
+print('DEBUG:\t', get_DEBUG_DevConfig())
+#set_DEBUG_DevConfig()
+print('New DEBUG:\t', get_DEBUG_DevConfig())
 
 # test_security.py copies
 from one_conf import get_DEBUG_DevConfig, get_DEBUG_BaseConfig, get_DEBUG_ProConfig, get_MAX_AGE_CORSConfig
+
+class TestDatabaseFunctions(TestCase):
 
     def test_get_DEBUG_DevConfig(self):
         self.assertEqual(get_DEBUG_DevConfig(), True)
