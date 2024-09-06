@@ -4,11 +4,11 @@ from one_conf import set_SUPP_CREDENTIALS, set_TESTING_Pro, set_DEBUG_Base
 class TestDatabaseFunctions(TestCase):
 
     def test_set_DEBUG_Base(self):
-        self.assertEqual(set_DEBUG_Base(), True)
+        self.assertTrue(set_DEBUG_Base())
 
     def test_set_TESTING_Pro(self):
-        self.assertEqual(set_TESTING_Pro(), False)
+        self.assertFalse(set_TESTING_Pro())
 
     def test_set_SUPP_CREDENTIALS(self):
-        self.assertEqual(set_SUPP_CREDENTIALS(), True)
+        self.assertTrue(set_SUPP_CREDENTIALS())
 
