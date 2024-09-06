@@ -46,6 +46,19 @@ mut.py -t one_conf.py -u test/test_security.py -m -c -e
 **timeout: 0 (0.0%):** Este es el número y porcentaje de mutaciones que causaron que las pruebas se quedaran en un bucle infinito o excedieran el tiempo límite establecido.
 
 
+# Python Debugger (pdb)
+
+This library allows you to Debug your code, just using the terminal.
+
+| **Intrucción** | **Descripción**                                                                       |
+|----------------|---------------------------------------------------------------------------------------| 
+| list (l)       | Lista 5 lineas arriba y debajo de la linea actual que se está ejecutando.             |
+| where (w)      | Nos indica la linea actual que se está ejecutando.                                    |
+| next (n)       | Continua a la siguiente linea.                                                        |
+| step (s)       | Ingresa a la función que se encuentra en la linea actual para hacer debug sobre ella. |
+| continue (c)   | Sigue la ejecución normalmente hasta el siguiente breakpoint.                         |
+
+
 # Notas:
 Instalé un clone de mutpy; este es editable y se puede hacer pruebas mientras se hace cambios sobre la misma libreria
 Se instaló con esas caracteristicas con el siguiente comando:
