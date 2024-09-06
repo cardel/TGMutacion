@@ -17,6 +17,6 @@ def run_tests(test):
 
 
 if __name__ == '__main__':
-    pdb.set_trace()
+    # pdb.set_trace()
     # run_tests('test/test_security.py')
     run_mutpy('one_conf.py', 'test/test_security.py')

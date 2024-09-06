@@ -11,6 +11,6 @@ def bubblesort(elms):
 elements = [39, 12, 18, 85, 72, 10, 2, 18]
 
 print(f'Lista sin ordenar: {elements}')
-pdb.set_trace()  # breakpoint. Es permitido tener muchos (indefinidos).
+#pdb.set_trace()  # breakpoint. Es permitido tener muchos (indefinidos).
 bubblesort(elements)
 print(f'Lista ordenada: {elements}')
