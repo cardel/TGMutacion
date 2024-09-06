@@ -1,4 +1,5 @@
 import subprocess
+import pdb
 
 
 def run_mutpy(target, test):
@@ -9,12 +10,13 @@ def run_mutpy(target, test):
 
 
 def run_tests(test):
-    command = ['python', '-m', 'unittest', test]
+    command = ['python3', '-m', 'unittest', test]
     result = subprocess.run(command, capture_output=True, text=True)
     print(result.stdout)
     print(result.stderr)
 
 
 if __name__ == '__main__':
-    run_tests('test/test_security.py')
-    # run_mutpy('one_conf.py', 'test/test_security.py')
+    pdb.set_trace()
+    # run_tests('test/test_security.py')
+    run_mutpy('one_conf.py', 'test/test_security.py')
