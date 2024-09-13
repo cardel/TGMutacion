@@ -2,65 +2,52 @@ import ast
 import re
 
 
-class WordFinder(ast.NodeVisitor):
-    def __init__(self, target_word):
-        self.target_word = target_word
-        self.found_lines = []
-        self.variable_values = {}
-        self.strings = []
-        self.functions = []
-
-    def visit_Str(self, node):
-        if re.search(self.target_word, node.s):
-            self.found_lines.append(node.lineno)
-            self.strings.append(node.s)
-        self.generic_visit(node)
-
-    def visit_Name(self, node):
-        if re.search(self.target_word, node.id):
-            self.found_lines.append(node.lineno)
-        self.generic_visit(node)
+class VariableReassigner(ast.NodeTransformer):
+    def __init__(self, target_variable, new_value):
+        self.target_variable = target_variable
+        self.new_value = new_value
+        self.original_value = None
+        self.found_line = None
 
     def visit_Assign(self, node):
         for target in node.targets:
-            if isinstance(target, ast.Name) and re.search(self.target_word, target.id):
-                self.found_lines.append(node.lineno)
-                try:
-                    value = eval(compile(ast.Expression(node.value), filename="<ast>", mode="eval"))
-                    self.variable_values[target.id] = value
-                except Exception as e:
-                    self.variable_values[target.id] = f'Error al evaluar: {e}'
-        self.generic_visit(node)
+            if isinstance(target, ast.Name) and re.search(self.target_variable, target.id):
+                # Capturar el valor original y la línea
+                if self.original_value is None:
+                    try:
+                        self.original_value = eval(compile(ast.Expression(node.value), filename="<ast>", mode="eval"))
+                    except Exception as e:
+                        self.original_value = f'Error al evaluar: {e}'
+                    self.found_line = node.lineno
 
-    def visit_FunctionDef(self, node):
-        if re.search(self.target_word, node.name):
-            self.found_lines.append(node.lineno)
-            self.functions.append(node.name)
-        self.generic_visit(node)
+                # Crear un nuevo nodo de valor
+                new_value_node = ast.Constant(value=self.new_value)
+                node.value = new_value_node
+        return self.generic_visit(node)
 
 
-def find_word_in_file(file_path, target_word):
+def reassign_variable_in_file(file_path, target_variable, new_value):
     with open(file_path, 'r') as file:
         file_content = file.read()
 
     tree = ast.parse(file_content)
-    finder = WordFinder(target_word)
-    finder.visit(tree)
+    reassigner = VariableReassigner(target_variable, new_value)
+    modified_tree = reassigner.visit(tree)
 
-    return finder.found_lines, finder.variable_values, finder.strings, finder.functions
+    # Convertir el AST modificado de vuelta a código
+    modified_code = ast.unparse(modified_tree)
+
+    with open(file_path, 'w') as file:
+        file.write(modified_code)
+
+    return reassigner.original_value, new_value, reassigner.found_line
 
 
 # Ejemplo de uso
-file_path = 'configuration/configuration.py'
-target_word = 'DEBUG'
-lines, variable_values, strings, functions = find_word_in_file(file_path, target_word)
-if lines:
-    print(f'La palabra "{target_word}" fue encontrada en las siguientes líneas: {lines}')
-    if variable_values:
-        print(f'Variables encontradas y sus valores: {variable_values}')
-    if strings:
-        print(f'Cadenas de texto encontradas: {strings}')
-    if functions:
-        print(f'Funciones encontradas: {functions}')
-else:
-    print(f'La palabra "{target_word}" no fue encontrada en el archivo.')
+file_path = 'configuration/configuration.py'  # 'ruta/al/archivo.py'
+target_variable = 'pruebaX'  # 'variable_a_reasignar'
+new_value = ['DESDE SEPTIEMBREEEEE!!!']  # 'DESDE SEPTIEMBREEEEE!!!'
+original_value, new_value, found_line = reassign_variable_in_file(file_path, target_variable, new_value)
+print(f'El valor original de la variable "{target_variable}" era: {original_value} type: {type(original_value)}')
+print(f'El nuevo valor de la variable "{target_variable}" es: {new_value} type: {type(new_value)}')
+print(f'La variable fue encontrada en la línea: {found_line}')
