@@ -38,13 +38,24 @@ app.secret_key = 'mysecretkey'
 #GET
 @app.route('/animals-json') 
 def get_animals_json():
-    if not verify_api_key(request): #Verificación de autorizacion para la petición GET
-        return jsonify({'error' : 'Unauthorized'}), 401
+    if not verify_api_key(request): # Verificación de autorización para la petición GET
+        return jsonify({'error': 'Unauthorized'}), 401
 
     cur = mysql.connection.cursor()
     cur.execute('SELECT * FROM animals')
     data = cur.fetchall()
-    return jsonify(animals=data)
+
+    animals = []
+    for row in data:
+        animal = {
+            "id": row[0],
+            "name": row[1],
+            "species": row[2],
+            "weight": row[3]
+        }
+        animals.append(animal)
+
+    return jsonify(animals=animals)
 
 #POST
 @app.route('/add_animal', methods=['POST'])
