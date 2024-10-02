@@ -7,22 +7,24 @@ from flask_socketio import SocketIO
 from flask import jsonify
 #Importación necesaria para la operación de los Json con la base de datos
 from flask_cors import CORS
-from configuration.configuration import CORSConfig
-#Configuraciones desde el paquete de CORS para tener operadores de configuración más generales
+from configuration.configuration import CORSConfig, AppConfig
 
 app = Flask(__name__)
-CORS(app)
 CORS(app, **CORSConfig.__dict__)
 app.config.from_object(CORSConfig)
+app.config.from_object(AppConfig)
 socketio = SocketIO(app)
 
-# Configuración de la API Key
-API_KEY = "your_secret_api_key"
+def verify_api_key(request):
+    api_key = request.headers.get('x-api-key') # Obtiene la key
+    origin = request.headers.get('Origin')  # Obtener la URL
 
-def verify_api_key(request): # Authorization
-    api_key = request.headers.get('x-api-key')
-    if api_key and api_key == API_KEY:
-        return True
+    # Validar la API Key y la URL de origen desde la configuración
+    if api_key and api_key == app.config['API_KEY']:
+        if origin and origin in app.config['ORIGINS']:
+            return True
+        else:
+            return False 
     return False
 
 #Conexion con la BD
@@ -32,8 +34,6 @@ app.config['MYSQL_PASSWORD'] = '12345678'
 app.config['MYSQL_DB'] = 'flaskanimals'
 mysql = MySQL(app)
 
-# Configuraciones
-app.secret_key = 'mysecretkey'
 
 #GET
 @app.route('/animals-json') 

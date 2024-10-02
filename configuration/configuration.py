@@ -15,7 +15,7 @@ class ProConfig(BaseConfig):
     TESTING = False
 
 class CORSConfig:
-    ORIGINS = ['http://example.com']
+    ORIGINS = ['http://example.com', 'http://another-example.com']
     METHODS = ['GET', 'POST', 'PUT', 'DELETE']
     ALLOW_HEADERS = ['Authorization', 'Content-Type']
     SUPPORTS_CREDENTIALS = True
@@ -23,3 +23,6 @@ class CORSConfig:
     SEND_WILDCARD = False
     AUTOMATIC_OPTIONS = True
     VARY_HEADER = True
+
+class AppConfig:
+    API_KEY = "your_secret_api_key"

@@ -11,12 +11,12 @@ class FlaskTestCase(unittest.TestCase):
         self.app_context = self.app.app_context()
         self.app_context.push()
 
-        # Se configura la bd mockeada
+        # Se configura la BD mockeada
         self.mock_mysql = patch('App.MySQL').start()
         self.mock_cursor = MagicMock()
         self.mock_mysql.return_value.connection.cursor.return_value = self.mock_cursor
 
-        # Simulacion de datos
+        # Simulación de datos
         self.mock_cursor.fetchall.return_value = [
             (5, 'Pelusa', 'Gato', '20'),
             (6, 'Nemo', 'Pez', '6'),
@@ -34,30 +34,46 @@ class FlaskTestCase(unittest.TestCase):
         patch.stopall()
         self.app_context.pop()
 
-    def test_get_animals_json(self):
-        response = self.client.get('/animals-json', headers={'x-api-key': 'your_secret_api_key'})
-        
-        # Respuesta
-        print('Response JSON:', response.json)
+    # Prueba de acceso autorizado
+    def test_get_animals_json_authorized(self):
+        allowed_origins = ['http://example.com', 'http://another-example.com']
 
-        # Datos esperados
-        expected_data = {
-            "animals": [
-                {"id": 5, "name": "Pelusa", "species": "Gato", "weight": "20"},
-                {"id": 6, "name": "Nemo", "species": "Pez", "weight": "6"},
-                {"id": 7, "name": "Marlin", "species": "Pez", "weight": "5"},
-                {"id": 9, "name": "Dory", "species": "Pez", "weight": "12"},
-                {"id": 11, "name": "Pelusa", "species": "Gato", "weight": "15"},
-                {"id": 12, "name": "Firulais", "species": "Perro", "weight": "21"},
-                {"id": 13, "name": "Lifo", "species": "Gato", "weight": "21"},
-                {"id": 14, "name": "Fido", "species": "Perro", "weight": "10"},
-                {"id": 15, "name": "Leon", "species": "Felino", "weight": "180"},
-                {"id": 16, "name": "Leon", "species": "Felino", "weight": "180"}
-            ]
-        }
-        
-        # Verificar que los datos devueltos son los esperados
-        self.assertEqual(response.json, expected_data)
+        for origin in allowed_origins:
+            with self.subTest(origin=origin):
+                response = self.client.get(
+                    '/animals-json',
+                    headers={
+                        'x-api-key': 'your_secret_api_key',
+                        'Origin': origin
+                    }
+                )
+                expected_data = {
+                    "animals": [
+                        {"id": 5, "name": "Pelusa", "species": "Gato", "weight": "20"},
+                        {"id": 6, "name": "Nemo", "species": "Pez", "weight": "6"},
+                        {"id": 7, "name": "Marlin", "species": "Pez", "weight": "5"},
+                        {"id": 9, "name": "Dory", "species": "Pez", "weight": "12"},
+                        {"id": 11, "name": "Pelusa", "species": "Gato", "weight": "15"},
+                        {"id": 12, "name": "Firulais", "species": "Perro", "weight": "21"},
+                        {"id": 13, "name": "Lifo", "species": "Gato", "weight": "21"},
+                        {"id": 14, "name": "Fido", "species": "Perro", "weight": "10"},
+                        {"id": 15, "name": "Leon", "species": "Felino", "weight": "180"},
+                        {"id": 16, "name": "Leon", "species": "Felino", "weight": "180"}
+                    ]
+                }
+                self.assertEqual(response.json, expected_data)
 
+    # Prueba de acceso no autorizado (origen no permitido)
+    def test_get_animals_json_unauthorized_wrong_origin(self):
+        response = self.client.get(
+            '/animals-json',
+            headers={
+                'x-api-key': 'your_secret_api_key',
+                'Origin': 'http://unauthorized.com'
+            }
+        )
+        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.json, {'error': 'Unauthorized'})
+        
 if __name__ == '__main__':
     unittest.main()
