@@ -2,6 +2,7 @@ import ast
 import re
 
 
+
 class VariableReassigner(ast.NodeTransformer):
     def __init__(self, target_variable, new_value):
         self.target_variable = target_variable
@@ -34,6 +35,8 @@ def reassign_variable_in_file(file_path, target_variable, new_value):
     reassigner = VariableReassigner(target_variable, new_value)
     modified_tree = reassigner.visit(tree)
 
+    print(ast.dump(tree, indent=4))
+
     # Convertir el AST modificado de vuelta a código
     modified_code = ast.unparse(modified_tree)
 
@@ -46,7 +49,8 @@ def reassign_variable_in_file(file_path, target_variable, new_value):
 # Ejemplo de uso
 file_path = 'configuration/configuration.py'  # 'ruta/al/archivo.py'
 target_variable = 'pruebaX'  # 'variable_a_reasignar'
-new_value = ['DESDE SEPTIEMBREEEEE!!!']  # 'DESDE SEPTIEMBREEEEE!!!'
+new_value = '["*"]' # nuevo valor
+
 original_value, new_value, found_line = reassign_variable_in_file(file_path, target_variable, new_value)
 print(f'El valor original de la variable "{target_variable}" era: {original_value} type: {type(original_value)}')
 print(f'El nuevo valor de la variable "{target_variable}" es: {new_value} type: {type(new_value)}')

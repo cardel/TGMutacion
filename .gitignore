@@ -1,5 +1,6 @@
 # Ignore the support files well as
 
+*.md
 copias.md
 README.md
 

@@ -1,8 +1,10 @@
+pruebaX = '["*"]'
+
 class DevConfig:
     DEBUG = True
 
 class BaseConfig:
-    SECRET_KEY = 'key'
+    SECRET_KEY = 'px'
     DEBUG = True
     TESTING = True
 
@@ -22,6 +24,3 @@ class CORSConfig:
     SEND_WILDCARD = False
     AUTOMATIC_OPTIONS = True
     VARY_HEADER = True
-
-# tutaina-tuturuma
-pruebaX = ['tutaina-tuturuma']
