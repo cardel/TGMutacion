@@ -1,0 +1,961 @@
+Module(
+    body=[
+        ImportFrom(
+            module='flask',
+            names=[
+                alias(name='Flask'),
+                alias(name='render_template'),
+                alias(name='request'),
+                alias(name='redirect'),
+                alias(name='url_for'),
+                alias(name='flash')],
+            level=0),
+        ImportFrom(
+            module='flask_mysqldb',
+            names=[
+                alias(name='MySQL')],
+            level=0),
+        ImportFrom(
+            module='flask_socketio',
+            names=[
+                alias(name='SocketIO')],
+            level=0),
+        ImportFrom(
+            module='flask',
+            names=[
+                alias(name='jsonify')],
+            level=0),
+        ImportFrom(
+            module='flask_cors',
+            names=[
+                alias(name='CORS')],
+            level=0),
+        ImportFrom(
+            module='configuration.configuration',
+            names=[
+                alias(name='CORSConfig'),
+                alias(name='AppConfig')],
+            level=0),
+        Assign(
+            targets=[
+                Name(id='app', ctx=Store())],
+            value=Call(
+                func=Name(id='Flask', ctx=Load()),
+                args=[
+                    Name(id='__name__', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='CORS', ctx=Load()),
+                args=[
+                    Name(id='app', ctx=Load())],
+                keywords=[
+                    keyword(
+                        value=Attribute(
+                            value=Name(id='CORSConfig', ctx=Load()),
+                            attr='__dict__',
+                            ctx=Load()))])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Attribute(
+                        value=Name(id='app', ctx=Load()),
+                        attr='config',
+                        ctx=Load()),
+                    attr='from_object',
+                    ctx=Load()),
+                args=[
+                    Name(id='CORSConfig', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Attribute(
+                        value=Name(id='app', ctx=Load()),
+                        attr='config',
+                        ctx=Load()),
+                    attr='from_object',
+                    ctx=Load()),
+                args=[
+                    Name(id='AppConfig', ctx=Load())],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='socketio', ctx=Store())],
+            value=Call(
+                func=Name(id='SocketIO', ctx=Load()),
+                args=[
+                    Name(id='app', ctx=Load())],
+                keywords=[])),
+        FunctionDef(
+            name='verify_api_key',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='request')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Assign(
+                    targets=[
+                        Name(id='api_key', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Attribute(
+                                value=Name(id='request', ctx=Load()),
+                                attr='headers',
+                                ctx=Load()),
+                            attr='get',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='x-api-key')],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='origin', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Attribute(
+                                value=Name(id='request', ctx=Load()),
+                                attr='headers',
+                                ctx=Load()),
+                            attr='get',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='Origin')],
+                        keywords=[])),
+                If(
+                    test=BoolOp(
+                        op=And(),
+                        values=[
+                            Name(id='api_key', ctx=Load()),
+                            Compare(
+                                left=Name(id='api_key', ctx=Load()),
+                                ops=[
+                                    Eq()],
+                                comparators=[
+                                    Subscript(
+                                        value=Attribute(
+                                            value=Name(id='app', ctx=Load()),
+                                            attr='config',
+                                            ctx=Load()),
+                                        slice=Constant(value='API_KEY'),
+                                        ctx=Load())])]),
+                    body=[
+                        If(
+                            test=BoolOp(
+                                op=And(),
+                                values=[
+                                    Name(id='origin', ctx=Load()),
+                                    Compare(
+                                        left=Name(id='origin', ctx=Load()),
+                                        ops=[
+                                            In()],
+                                        comparators=[
+                                            Subscript(
+                                                value=Attribute(
+                                                    value=Name(id='app', ctx=Load()),
+                                                    attr='config',
+                                                    ctx=Load()),
+                                                slice=Constant(value='ORIGINS'),
+                                                ctx=Load())])]),
+                            body=[
+                                Return(
+                                    value=Constant(value=True))],
+                            orelse=[
+                                Return(
+                                    value=Constant(value=False))])],
+                    orelse=[]),
+                Return(
+                    value=Constant(value=False))],
+            decorator_list=[],
+            type_params=[]),
+        Assign(
+            targets=[
+                Subscript(
+                    value=Attribute(
+                        value=Name(id='app', ctx=Load()),
+                        attr='config',
+                        ctx=Load()),
+                    slice=Constant(value='MYSQL_HOST'),
+                    ctx=Store())],
+            value=Constant(value='172.20.0.3')),
+        Assign(
+            targets=[
+                Subscript(
+                    value=Attribute(
+                        value=Name(id='app', ctx=Load()),
+                        attr='config',
+                        ctx=Load()),
+                    slice=Constant(value='MYSQL_USER'),
+                    ctx=Store())],
+            value=Constant(value='root')),
+        Assign(
+            targets=[
+                Subscript(
+                    value=Attribute(
+                        value=Name(id='app', ctx=Load()),
+                        attr='config',
+                        ctx=Load()),
+                    slice=Constant(value='MYSQL_PASSWORD'),
+                    ctx=Store())],
+            value=Constant(value='example')),
+        Assign(
+            targets=[
+                Subscript(
+                    value=Attribute(
+                        value=Name(id='app', ctx=Load()),
+                        attr='config',
+                        ctx=Load()),
+                    slice=Constant(value='MYSQL_DB'),
+                    ctx=Store())],
+            value=Constant(value='animals_db')),
+        Assign(
+            targets=[
+                Name(id='mysql', ctx=Store())],
+            value=Call(
+                func=Name(id='MySQL', ctx=Load()),
+                args=[
+                    Name(id='app', ctx=Load())],
+                keywords=[])),
+        FunctionDef(
+            name='get_animals_json',
+            args=arguments(
+                posonlyargs=[],
+                args=[],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                If(
+                    test=UnaryOp(
+                        op=Not(),
+                        operand=Call(
+                            func=Name(id='verify_api_key', ctx=Load()),
+                            args=[
+                                Name(id='request', ctx=Load())],
+                            keywords=[])),
+                    body=[
+                        Return(
+                            value=Tuple(
+                                elts=[
+                                    Call(
+                                        func=Name(id='jsonify', ctx=Load()),
+                                        args=[
+                                            Dict(
+                                                keys=[
+                                                    Constant(value='error')],
+                                                values=[
+                                                    Constant(value='Unauthorized')])],
+                                        keywords=[]),
+                                    Constant(value=401)],
+                                ctx=Load()))],
+                    orelse=[]),
+                Assign(
+                    targets=[
+                        Name(id='cur', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Attribute(
+                                value=Name(id='mysql', ctx=Load()),
+                                attr='connection',
+                                ctx=Load()),
+                            attr='cursor',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='cur', ctx=Load()),
+                            attr='execute',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='SELECT * FROM animals')],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='data', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='cur', ctx=Load()),
+                            attr='fetchall',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='animals', ctx=Store())],
+                    value=List(elts=[], ctx=Load())),
+                For(
+                    target=Name(id='row', ctx=Store()),
+                    iter=Name(id='data', ctx=Load()),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='animal', ctx=Store())],
+                            value=Dict(
+                                keys=[
+                                    Constant(value='id'),
+                                    Constant(value='name'),
+                                    Constant(value='species'),
+                                    Constant(value='weight')],
+                                values=[
+                                    Subscript(
+                                        value=Name(id='row', ctx=Load()),
+                                        slice=Constant(value=0),
+                                        ctx=Load()),
+                                    Subscript(
+                                        value=Name(id='row', ctx=Load()),
+                                        slice=Constant(value=1),
+                                        ctx=Load()),
+                                    Subscript(
+                                        value=Name(id='row', ctx=Load()),
+                                        slice=Constant(value=2),
+                                        ctx=Load()),
+                                    Subscript(
+                                        value=Name(id='row', ctx=Load()),
+                                        slice=Constant(value=3),
+                                        ctx=Load())])),
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='animals', ctx=Load()),
+                                    attr='append',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='animal', ctx=Load())],
+                                keywords=[]))],
+                    orelse=[]),
+                Return(
+                    value=Call(
+                        func=Name(id='jsonify', ctx=Load()),
+                        args=[],
+                        keywords=[
+                            keyword(
+                                arg='animals',
+                                value=Name(id='animals', ctx=Load()))]))],
+            decorator_list=[
+                Call(
+                    func=Attribute(
+                        value=Name(id='app', ctx=Load()),
+                        attr='route',
+                        ctx=Load()),
+                    args=[
+                        Constant(value='/animals-json')],
+                    keywords=[])],
+            type_params=[]),
+        FunctionDef(
+            name='add_animal',
+            args=arguments(
+                posonlyargs=[],
+                args=[],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                If(
+                    test=UnaryOp(
+                        op=Not(),
+                        operand=Call(
+                            func=Name(id='verify_api_key', ctx=Load()),
+                            args=[
+                                Name(id='request', ctx=Load())],
+                            keywords=[])),
+                    body=[
+                        Return(
+                            value=Tuple(
+                                elts=[
+                                    Call(
+                                        func=Name(id='jsonify', ctx=Load()),
+                                        args=[
+                                            Dict(
+                                                keys=[
+                                                    Constant(value='error')],
+                                                values=[
+                                                    Constant(value='Unauthorized')])],
+                                        keywords=[]),
+                                    Constant(value=401)],
+                                ctx=Load()))],
+                    orelse=[]),
+                If(
+                    test=Compare(
+                        left=Attribute(
+                            value=Name(id='request', ctx=Load()),
+                            attr='method',
+                            ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value='POST')]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='animal_data', ctx=Store())],
+                            value=Attribute(
+                                value=Name(id='request', ctx=Load()),
+                                attr='json',
+                                ctx=Load())),
+                        Assign(
+                            targets=[
+                                Name(id='animalname', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='animal_data', ctx=Load()),
+                                    attr='get',
+                                    ctx=Load()),
+                                args=[
+                                    Constant(value='Nombre')],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Name(id='species', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='animal_data', ctx=Load()),
+                                    attr='get',
+                                    ctx=Load()),
+                                args=[
+                                    Constant(value='Especie')],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Name(id='weight', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='animal_data', ctx=Load()),
+                                    attr='get',
+                                    ctx=Load()),
+                                args=[
+                                    Constant(value='Peso')],
+                                keywords=[])),
+                        If(
+                            test=UnaryOp(
+                                op=Not(),
+                                operand=BoolOp(
+                                    op=And(),
+                                    values=[
+                                        Name(id='animalname', ctx=Load()),
+                                        Name(id='species', ctx=Load()),
+                                        Name(id='weight', ctx=Load())])),
+                            body=[
+                                Return(
+                                    value=Tuple(
+                                        elts=[
+                                            Call(
+                                                func=Name(id='jsonify', ctx=Load()),
+                                                args=[
+                                                    Dict(
+                                                        keys=[
+                                                            Constant(value='error')],
+                                                        values=[
+                                                            Constant(value='Falta uno o más campos obligatorios')])],
+                                                keywords=[]),
+                                            Constant(value=400)],
+                                        ctx=Load()))],
+                            orelse=[]),
+                        Assign(
+                            targets=[
+                                Name(id='cur', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='mysql', ctx=Load()),
+                                        attr='connection',
+                                        ctx=Load()),
+                                    attr='cursor',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[])),
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='cur', ctx=Load()),
+                                    attr='execute',
+                                    ctx=Load()),
+                                args=[
+                                    Constant(value='INSERT INTO animals (animalname, species, weight) VALUES(%s, %s, %s)'),
+                                    Tuple(
+                                        elts=[
+                                            Name(id='animalname', ctx=Load()),
+                                            Name(id='species', ctx=Load()),
+                                            Name(id='weight', ctx=Load())],
+                                        ctx=Load())],
+                                keywords=[])),
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='mysql', ctx=Load()),
+                                        attr='connection',
+                                        ctx=Load()),
+                                    attr='commit',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[])),
+                        Expr(
+                            value=Call(
+                                func=Name(id='flash', ctx=Load()),
+                                args=[
+                                    Constant(value='Animal Added Successfully')],
+                                keywords=[])),
+                        Return(
+                            value=Tuple(
+                                elts=[
+                                    Call(
+                                        func=Name(id='jsonify', ctx=Load()),
+                                        args=[
+                                            Dict(
+                                                keys=[
+                                                    Constant(value='message')],
+                                                values=[
+                                                    Constant(value='Animal added successfully')])],
+                                        keywords=[]),
+                                    Constant(value=201)],
+                                ctx=Load()))],
+                    orelse=[])],
+            decorator_list=[
+                Call(
+                    func=Attribute(
+                        value=Name(id='app', ctx=Load()),
+                        attr='route',
+                        ctx=Load()),
+                    args=[
+                        Constant(value='/add_animal')],
+                    keywords=[
+                        keyword(
+                            arg='methods',
+                            value=List(
+                                elts=[
+                                    Constant(value='POST')],
+                                ctx=Load()))])],
+            type_params=[]),
+        FunctionDef(
+            name='update_animal',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='id')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                If(
+                    test=UnaryOp(
+                        op=Not(),
+                        operand=Call(
+                            func=Name(id='verify_api_key', ctx=Load()),
+                            args=[
+                                Name(id='request', ctx=Load())],
+                            keywords=[])),
+                    body=[
+                        Return(
+                            value=Tuple(
+                                elts=[
+                                    Call(
+                                        func=Name(id='jsonify', ctx=Load()),
+                                        args=[
+                                            Dict(
+                                                keys=[
+                                                    Constant(value='error')],
+                                                values=[
+                                                    Constant(value='Unauthorized')])],
+                                        keywords=[]),
+                                    Constant(value=401)],
+                                ctx=Load()))],
+                    orelse=[]),
+                If(
+                    test=Compare(
+                        left=Attribute(
+                            value=Name(id='request', ctx=Load()),
+                            attr='method',
+                            ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value='PUT')]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='animal_data', ctx=Store())],
+                            value=Attribute(
+                                value=Name(id='request', ctx=Load()),
+                                attr='json',
+                                ctx=Load())),
+                        Assign(
+                            targets=[
+                                Name(id='animalname', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='animal_data', ctx=Load()),
+                                    attr='get',
+                                    ctx=Load()),
+                                args=[
+                                    Constant(value='Nombre')],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Name(id='species', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='animal_data', ctx=Load()),
+                                    attr='get',
+                                    ctx=Load()),
+                                args=[
+                                    Constant(value='Especie')],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Name(id='weight', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='animal_data', ctx=Load()),
+                                    attr='get',
+                                    ctx=Load()),
+                                args=[
+                                    Constant(value='Peso')],
+                                keywords=[])),
+                        If(
+                            test=UnaryOp(
+                                op=Not(),
+                                operand=BoolOp(
+                                    op=And(),
+                                    values=[
+                                        Name(id='animalname', ctx=Load()),
+                                        Name(id='species', ctx=Load()),
+                                        Name(id='weight', ctx=Load())])),
+                            body=[
+                                Return(
+                                    value=Tuple(
+                                        elts=[
+                                            Call(
+                                                func=Name(id='jsonify', ctx=Load()),
+                                                args=[
+                                                    Dict(
+                                                        keys=[
+                                                            Constant(value='error')],
+                                                        values=[
+                                                            Constant(value='Falta uno o más campos obligatorios')])],
+                                                keywords=[]),
+                                            Constant(value=400)],
+                                        ctx=Load()))],
+                            orelse=[]),
+                        Assign(
+                            targets=[
+                                Name(id='cur', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='mysql', ctx=Load()),
+                                        attr='connection',
+                                        ctx=Load()),
+                                    attr='cursor',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[])),
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='cur', ctx=Load()),
+                                    attr='execute',
+                                    ctx=Load()),
+                                args=[
+                                    Constant(value='\n            UPDATE animals\n            SET animalname = %s,\n                species = %s,\n                weight = %s\n            WHERE idanimals = %s \n        '),
+                                    Tuple(
+                                        elts=[
+                                            Name(id='animalname', ctx=Load()),
+                                            Name(id='species', ctx=Load()),
+                                            Name(id='weight', ctx=Load()),
+                                            Name(id='id', ctx=Load())],
+                                        ctx=Load())],
+                                keywords=[])),
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='mysql', ctx=Load()),
+                                        attr='connection',
+                                        ctx=Load()),
+                                    attr='commit',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[])),
+                        Expr(
+                            value=Call(
+                                func=Name(id='flash', ctx=Load()),
+                                args=[
+                                    Constant(value='Animal Updated Successfully')],
+                                keywords=[])),
+                        Return(
+                            value=Tuple(
+                                elts=[
+                                    Call(
+                                        func=Name(id='jsonify', ctx=Load()),
+                                        args=[
+                                            Dict(
+                                                keys=[
+                                                    Constant(value='message')],
+                                                values=[
+                                                    Constant(value='Animal updated successfully')])],
+                                        keywords=[]),
+                                    Constant(value=200)],
+                                ctx=Load()))],
+                    orelse=[])],
+            decorator_list=[
+                Call(
+                    func=Attribute(
+                        value=Name(id='app', ctx=Load()),
+                        attr='route',
+                        ctx=Load()),
+                    args=[
+                        Constant(value='/update/<int:id>')],
+                    keywords=[
+                        keyword(
+                            arg='methods',
+                            value=List(
+                                elts=[
+                                    Constant(value='PUT')],
+                                ctx=Load()))])],
+            type_params=[]),
+        FunctionDef(
+            name='delete_animal',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='id')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                If(
+                    test=UnaryOp(
+                        op=Not(),
+                        operand=Call(
+                            func=Name(id='verify_api_key', ctx=Load()),
+                            args=[
+                                Name(id='request', ctx=Load())],
+                            keywords=[])),
+                    body=[
+                        Return(
+                            value=Tuple(
+                                elts=[
+                                    Call(
+                                        func=Name(id='jsonify', ctx=Load()),
+                                        args=[
+                                            Dict(
+                                                keys=[
+                                                    Constant(value='error')],
+                                                values=[
+                                                    Constant(value='Unauthorized')])],
+                                        keywords=[]),
+                                    Constant(value=401)],
+                                ctx=Load()))],
+                    orelse=[]),
+                If(
+                    test=Compare(
+                        left=Attribute(
+                            value=Name(id='request', ctx=Load()),
+                            attr='method',
+                            ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value='DELETE')]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='cur', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='mysql', ctx=Load()),
+                                        attr='connection',
+                                        ctx=Load()),
+                                    attr='cursor',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[])),
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='cur', ctx=Load()),
+                                    attr='execute',
+                                    ctx=Load()),
+                                args=[
+                                    Constant(value='DELETE FROM animals WHERE idanimals = %s'),
+                                    Tuple(
+                                        elts=[
+                                            Name(id='id', ctx=Load())],
+                                        ctx=Load())],
+                                keywords=[])),
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='mysql', ctx=Load()),
+                                        attr='connection',
+                                        ctx=Load()),
+                                    attr='commit',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[])),
+                        Expr(
+                            value=Call(
+                                func=Name(id='flash', ctx=Load()),
+                                args=[
+                                    Constant(value='Animal Removed Successfully')],
+                                keywords=[])),
+                        Return(
+                            value=Tuple(
+                                elts=[
+                                    Call(
+                                        func=Name(id='jsonify', ctx=Load()),
+                                        args=[
+                                            Dict(
+                                                keys=[
+                                                    Constant(value='message')],
+                                                values=[
+                                                    Constant(value='Animal deleted successfully')])],
+                                        keywords=[]),
+                                    Constant(value=200)],
+                                ctx=Load()))],
+                    orelse=[])],
+            decorator_list=[
+                Call(
+                    func=Attribute(
+                        value=Name(id='app', ctx=Load()),
+                        attr='route',
+                        ctx=Load()),
+                    args=[
+                        Constant(value='/delete/<int:id>')],
+                    keywords=[
+                        keyword(
+                            arg='methods',
+                            value=List(
+                                elts=[
+                                    Constant(value='DELETE')],
+                                ctx=Load()))])],
+            type_params=[]),
+        FunctionDef(
+            name='Index',
+            args=arguments(
+                posonlyargs=[],
+                args=[],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Assign(
+                    targets=[
+                        Name(id='cur', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Attribute(
+                                value=Name(id='mysql', ctx=Load()),
+                                attr='connection',
+                                ctx=Load()),
+                            attr='cursor',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='cur', ctx=Load()),
+                            attr='execute',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='SELECT * FROM animals')],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='data', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='cur', ctx=Load()),
+                            attr='fetchall',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[])),
+                Return(
+                    value=Call(
+                        func=Name(id='render_template', ctx=Load()),
+                        args=[
+                            Constant(value='index.html')],
+                        keywords=[
+                            keyword(
+                                arg='animals',
+                                value=Name(id='data', ctx=Load()))]))],
+            decorator_list=[
+                Call(
+                    func=Attribute(
+                        value=Name(id='app', ctx=Load()),
+                        attr='route',
+                        ctx=Load()),
+                    args=[
+                        Constant(value='/')],
+                    keywords=[])],
+            type_params=[]),
+        If(
+            test=Compare(
+                left=Name(id='__name__', ctx=Load()),
+                ops=[
+                    Eq()],
+                comparators=[
+                    Constant(value='__main__')]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='Configuraciones actuales de Flask:')],
+                        keywords=[])),
+                For(
+                    target=Tuple(
+                        elts=[
+                            Name(id='key', ctx=Store()),
+                            Name(id='value', ctx=Store())],
+                        ctx=Store()),
+                    iter=Call(
+                        func=Attribute(
+                            value=Attribute(
+                                value=Name(id='app', ctx=Load()),
+                                attr='config',
+                                ctx=Load()),
+                            attr='items',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    JoinedStr(
+                                        values=[
+                                            FormattedValue(
+                                                value=Name(id='key', ctx=Load()),
+                                                conversion=-1),
+                                            Constant(value=': '),
+                                            FormattedValue(
+                                                value=Name(id='value', ctx=Load()),
+                                                conversion=-1)])],
+                                keywords=[]))],
+                    orelse=[]),
+                Expr(
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='app', ctx=Load()),
+                            attr='run',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[
+                            keyword(
+                                arg='port',
+                                value=Constant(value=3000)),
+                            keyword(
+                                arg='debug',
+                                value=Constant(value=True))]))],
+            orelse=[])],
+    type_ignores=[])
